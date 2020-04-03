@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <ui:composition template="./WEB-INF/Templates/Plantilla.xhtml">
+            <ui:define name="content">
+                <h:form>
+                    <p:outputLabel value="Fecha Inicial" />
+                    <p:calendar id="popup" value="#{reporteBean.fechaI}" />
+                    
+                    <p:outputLabel value="Fecha Inicial" />
+                    <p:calendar id="popup1" value="#{reporteBean.fechaF}" />
+                    
+                    <p:commandButton value="Consultar" actionListener="#{reporteBean.consultarCompras()}" update="reporteC" />
+                    
+                    <p:dataTable id="reporteC" value="#{reporteBean.listaReporte}" var="repC" paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} Registros"
+                                 rowsPerPageTemplate="5,10,15">
+                        <p:column headerText="Nombre Cliente" >
+                            #{repC.nombreCliente}
+                        </p:column>
+                        <p:column headerText="Nombre Producto" >
+                            #{repC.nombreProducto}
+                        </p:column>
+                        <p:column headerText="Cantidad" >
+                            #{repC.cantidad}
+                        </p:column>
+                        <p:column headerText="Valor Total" >
+                            #{repC.valorTotal}
+                        </p:column>
+                        <p:column headerText="Fecha Compra" >
+                            #{repC.fechaCompra}
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

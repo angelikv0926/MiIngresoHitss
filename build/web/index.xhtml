@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    
+    <h:head>
+        <title>MiIngresoHitss</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    </h:head>
+    
+    <h:body>
+        <p:growl id="msj" autoUpdate="true" showDetail="true" />
+        <h:form id="formCenter">
+            <h:panelGrid columns="2">
+                <p:outputLabel for="usuarioL" value="Usuario" />
+                <p:inputText id="usuarioL" value="#{personaBean.persona.usuario}" required="true" />
+                
+                <p:outputLabel for="claveL" value="Clave" />
+                <p:inputText id="claveL" value="#{personaBean.persona.clave}" required="true" type="password" />
+                
+                <h:column />
+                <p:commandButton icon="ui-icon-key" value="Iniciar Sesion" action="#{personaBean.iniciarSesion()}" />
+            </h:panelGrid>
+            <p:separator />
+        </h:form>
+    </h:body>
+</html>
+

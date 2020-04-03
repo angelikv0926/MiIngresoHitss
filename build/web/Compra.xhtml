@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <ui:composition template="./WEB-INF/Templates/Plantilla.xhtml">
+
+            <ui:define name="content">
+                <f:event type="preRenderView" listener="#{personaBean.listarPersona()}" />
+                <f:event type="preRenderView" listener="#{productoBean.listarProducto()}" />
+                <p:growl id="msj" autoUpdate="true" showDetail="true" />
+                
+                <h:form>
+                    <p:outputLabel value="Cliente" />
+                    <p:selectOneMenu value="#{compraBean.compra.id_persona}" converter="omnifaces.SelectItemsConverter" >
+                        <f:selectItem noSelectionOption="true" itemLabel="...Seleccione..." itemValue="#{null}" />
+                        <f:selectItems value="#{personaBean.listaPersona}" var="cli" itemLabel="#{cli.nombres} #{cli.apellidos}" itemValue="#{cli}" />
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel value="Producto" />
+                    <p:selectOneMenu value="#{compraBean.producto}" converter="omnifaces.SelectItemsConverter">
+                        <f:selectItem noSelectionOption="true" itemLabel="...Seleccione..." itemValue="#{null}" />
+                        <f:selectItems value="#{productoBean.listaProducto}" var="prod" itemLabel="#{prod.nombre}" itemValue="#{prod}" />
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel value="Cantidad" />
+                    <p:inputText value="#{compraBean.cantidad}" />
+                    
+                    <p:commandButton value="Agregar" actionListener="#{compraBean.agregarDetalle()}" update="detalleC" />
+                    
+                    <p:dataTable id="detalleC" value="#{compraBean.listaCompraD}" var="detC" paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} Registros"
+                                 rowsPerPageTemplate="5,10,15">
+                        <p:column headerText="Nombre Producto" >
+                            #{detC.id_producto.nombre}
+                        </p:column>
+                        <p:column headerText="Precio Producto" >
+                            #{detC.id_producto.precio}
+                        </p:column>
+                        <p:column headerText="Cantidad" >
+                            #{detC.cantidad}
+                        </p:column>
+                        
+                    </p:dataTable>
+                    <p:commandButton value="Registrar" actionListener="#{compraBean.registrarCompra()}" 
+                                     action="Compra?faces-redirect=true"/>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+    </body>
+</html>

@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+        <ui:composition template="./WEB-INF/Templates/Plantilla.xhtml">
+            <ui:define name="content">
+                <p:growl id="msj" showDetail="true" />
+                <h:form id="frmPersona">
+                    <p:commandButton id="registrar" value="Registrar" oncomplete="PF('dialogPersona').show();" 
+                                     actionListener="#{personaBean.setAccion('Registrar')}" update=":dlogPersona"/>
+                    
+                    <p:dataTable id="tblPersona" value="#{personaBean.listaPersona}" var="listarPersona">
+                        <p:column headerText="Identificacion">
+                            <p:outputLabel value="#{listarPersona.identificacion}" />
+                        </p:column>
+                        <p:column headerText="Nombres">
+                            <p:outputLabel value="#{listarPersona.nombres}" />
+                        </p:column>
+                        <p:column headerText="Apellidos">
+                            <p:outputLabel value="#{listarPersona.apellidos}" />
+                        </p:column>
+                        <p:column headerText="Sexo">
+                            <p:outputLabel value="#{listarPersona.sexo}">
+                                <f:converter converterId="sexoConverter" />
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column headerText="Usuario">
+                            <p:outputLabel value="#{listarPersona.usuario}" />
+                        </p:column>
+
+                        <p:column headerText="Acciones">
+                            <p:commandLink value="Modificar Cliente" actionListener="#{personaBean.consultarById(listarPersona)}"
+                                           oncomplete="PF('dialogPersona').show();" update=":dlogPersona"/>
+                            <br></br>
+                            <p:commandLink value="Eliminar Cliente" actionListener="#{personaBean.eliminarPersona(listarPersona)}"
+                                           update="tblPersona"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+
+                <p:dialog header="#{personaBean.accion} Persona" widgetVar="dialogPersona" id="dlogPersona"
+                          closeOnEscape="true" modal="true" draggable="false" resizable="false">
+                    <h:form>
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <p:outputLabel for="idenPersD" value="Identificacion " />
+                            <c:choose>
+                                <c:when test="#{personaBean.accion.equalsIgnoreCase('registrar')}">
+                                    <p:inputText id="idenPersD" value="#{personaBean.persona.identificacion}" required="true" />
+                                </c:when>
+                                <c:otherwise>
+                                    <p:inputText id="idenPersD" value="#{personaBean.persona.identificacion}" disabled="true" />
+                                </c:otherwise>
+                            </c:choose>
+
+                            <p:outputLabel for="nombPersD" value="Nombre" />
+                            <p:inputText id="nombPersD" value="#{personaBean.persona.nombres}" required="true" />
+
+                            <p:outputLabel for="apePersD" value="Apellido" />
+                            <p:inputText id="apePersD" value="#{personaBean.persona.apellidos}" required="true" />
+
+                            <p:outputLabel for="sexPersD" value="Sexo" />
+                            <p:selectOneMenu id="sexPersD" value="#{personaBean.persona.sexo}" required="true" >
+                                <f:selectItem itemLabel="...Seleccione..." itemValue="#" />
+                                <f:selectItem itemLabel="Masculino" itemValue="M" />
+                                <f:selectItem itemLabel="Femenino" itemValue="F" />
+                            </p:selectOneMenu>
+                            
+                            <p:outputLabel for="usuarioD" value="Usuario" />
+                            <c:choose>
+                                <c:when test="#{personaBean.accion.equalsIgnoreCase('registrar')}">
+                                    <p:inputText id="usuarioD" value="#{personaBean.persona.usuario}" required="true" />
+                                </c:when>
+                                <c:otherwise>
+                                    <p:inputText id="usuarioD" value="#{personaBean.persona.usuario}" disabled="true" />
+                                </c:otherwise>
+                            </c:choose>
+                            
+                            <p:outputLabel for="claveD" value="Clave" />
+                            <p:inputText id="claveD" value="#{personaBean.persona.clave}" type="password" required="true" />
+
+                            <p:commandButton value="#{personaBean.accion}" actionListener="#{personaBean.evaluarAccion()}" 
+                                             oncomplete="PF('dialogPersona').hide();" update=":frmPersona:tblPersona, :msj"/>
+                            <p:commandButton value="Cancelar" immediate="true" oncomplete="PF('dialogPersona').hide();" />
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+                
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

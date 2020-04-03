@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <ui:composition template="./WEB-INF/Templates/Plantilla.xhtml">
+            <ui:define name="content">
+                <p:growl id="msj" showDetail="true" />
+                <h:form id="frmProducto">
+                    <p:commandButton id="registrar" value="Registrar" oncomplete="PF('dialogProducto').show();" 
+                                     actionListener="#{productoBean.setAccion('Registrar')}" update=":dlogProducto"/>
+                    
+                    <p:dataTable id="tblProducto" value="#{productoBean.listaProducto}" var="listarProducto">
+                        <p:column headerText="Nombre Producto">
+                            <p:outputLabel value="#{listarProducto.nombre}" />
+                        </p:column>
+                        <p:column headerText="Precio">
+                            <p:outputLabel value="#{listarProducto.precio}" >
+                                <f:convertNumber type="currency" currencySymbol="$ " minFractionDigits="2" />
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column headerText="Acciones">
+                            <p:commandLink value="Modificar Producto" actionListener="#{productoBean.consultarById(listarProducto)}"
+                                           oncomplete="PF('dialogProducto').show();" update=":dlogProducto"/>
+                            <br></br>
+                            <p:commandLink value="Eliminar Producto" actionListener="#{productoBean.eliminarProducto(listarProducto)}"
+                                           update="tblProducto"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+
+                <p:dialog header="#{productoBean.accion} Producto" widgetVar="dialogProducto" id="dlogProducto"
+                          closeOnEscape="true" modal="true" draggable="false" resizable="false">
+                    <h:form>
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <p:outputLabel for="nombProdD" value="Nombre" />
+                            <p:inputText id="nombProdD" value="#{productoBean.producto.nombre}" required="true" />
+
+                            <p:outputLabel for="valProdD" value="Precio" />
+                            <p:inputText id="valProdD" value="#{productoBean.producto.precio}" required="true" />
+
+                            <p:commandButton value="#{productoBean.accion}" actionListener="#{productoBean.evaluarAccion()}" 
+                                             oncomplete="PF('dialogProducto').hide();" update=":frmProducto:tblProducto, :msj"/>
+                            <p:commandButton value="Cancelar" immediate="true" oncomplete="PF('dialogProducto').hide();" />
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
